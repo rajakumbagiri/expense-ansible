@@ -3,7 +3,7 @@
   become: yes
   vars:
     loginhost: rajakumbagiri.online
-  var_prompt:
+  vars_prompt:
    - name: root password
      prompt: Please enter your password
      private: no

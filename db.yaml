@@ -4,40 +4,40 @@
   vars:
     loginhost: rajakumbagiri.online
   vars_prompt:
-   - name: root password
-     prompt: Please enter your password
+  -  name: my_root_password
+     prompt: Please enter your MySQL root password
      private: no
   tasks:
-  - name: Instal mysql server
-    ansible.builtin.dnf:
-    name: mysql-server
-    state: latest
+  -  name: Instal mysql server
+     ansible.builtin.dnf:
+     name: mysql-server
+     state: latest
 
-  - name: start and enable mysql server
-    ansible.builtin.service:
-    name: mysqld
-    state: started
-    enable: yes
+  -  name: start and enable mysql server
+     ansible.builtin.service:
+     name: mysqld
+     state: started
+     enable: yes
   
-  - name: install mysql dependencies
-    ansible.builtin.pipe:
-    name:
+  -  name: install mysql dependencies
+     ansible.builtin.pipe:
+     name:
      - pysql
      - cryptography
-    excutable: pip3.9
+     excutable: pip3.9
 
-  - name: check db connection
-    community.mysql.mysql_info:
+  -  name: check db connection
+     community.mysql.mysql_info:
       login_user: "{{ mysql_root_password }}"
       login_host: "{{ login_host }}"
       filter: version
-    ignore_errors: yes
-    register: mysql_connection_output
+     ignore_errors: yes
+     register: mysql_connection_output
 
-  - name: print output
-    ansible.builtin.debug:
+  -  name: print output
+     ansible.builtin.debug:
       msg: "Output: {{mysql_connection_output}} "
 
-  - name: setup root password
-    ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password }}"
-    when: mysql_connection_output.failed is true # don't give {{ }} in when condition
+  -  name: setup root password
+     ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password }}"
+     when: mysql_connection_output.failed is true # don't give {{ }} in when condition
